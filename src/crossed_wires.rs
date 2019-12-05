@@ -1,13 +1,10 @@
 extern crate regex;
 
-use std::fmt;
-use regex::Regex;
-use std::str::FromStr;
 use std::num::ParseIntError;
 use std::ops::Add;
+use std::str::FromStr;
 
-use std::collections::HashSet;
-use std::cmp::Ordering;
+use regex::Regex;
 
 #[derive(Debug, Eq, PartialEq)]
 enum Direction {
@@ -177,7 +174,7 @@ pub fn solve_part_one() -> Option<usize> {
 
 fn find_closest_intersection_by_wire_length(wire0: &Vec<Coordinate>, wire1: &Vec<Coordinate>) -> Option<(Coordinate, usize)> {
     let mut d0: usize = 0;
-    let mut d1: usize = 0;
+    let mut d1: usize;
     let mut intersection_points: Vec<(Coordinate, usize)> = vec![];
     for (x0, y0) in wire0.iter().zip(wire0[1..].iter()) {
         d0 += manhattan_distance(x0, y0);
@@ -211,7 +208,7 @@ fn find_closest_intersection_by_wire_length(wire0: &Vec<Coordinate>, wire1: &Vec
 pub fn solve_part_two() -> Option<usize> {
     let input = super::get_input::main(3);
     let (wire0, wire1) = parse_input(input);
-    if let Some((coord, distance)) = find_closest_intersection_by_wire_length(&wire0, &wire1) {
+    if let Some((_, distance)) = find_closest_intersection_by_wire_length(&wire0, &wire1) {
         Some(distance)
     } else {
         None
@@ -267,7 +264,7 @@ U62,R66,U55,R34,D71,R55,D58,R83".to_string();
 
     #[test]
     fn test_solve_part_one() {
-        assert_eq!(solve_part_one(), Some(806));
+        assert_eq!(solve_part_one(), Some(316));
     }
 
     #[test]
@@ -280,6 +277,6 @@ U62,R66,U55,R34,D71,R55,D58,R83".to_string();
 
     #[test]
     fn test_solve_part_two() {
-        assert_eq!(solve_part_two(), Some(66076));
+        assert_eq!(solve_part_two(), Some(16368));
     }
 }

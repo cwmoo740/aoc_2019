@@ -1,5 +1,5 @@
-use std::path::Path;
 use std::fs;
+use std::path::Path;
 
 fn get_file_path(day: usize) -> String {
     format!("./data/day_{}.txt", day)
