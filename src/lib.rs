@@ -7,3 +7,4 @@ pub mod alarm_1202;
 pub mod crossed_wires;
 pub mod secure_container;
 pub mod sunny_asteroids;
+pub mod universal_orbit_map;
