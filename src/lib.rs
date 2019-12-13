@@ -12,3 +12,4 @@ pub mod secure_container;
 pub mod sunny_asteroids;
 pub mod universal_orbit_map;
 pub mod amplification_circuit;
+pub mod space_image;
