@@ -13,3 +13,4 @@ pub mod sunny_asteroids;
 pub mod universal_orbit_map;
 pub mod amplification_circuit;
 pub mod space_image;
+pub mod sensor_boost;

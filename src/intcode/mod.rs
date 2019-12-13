@@ -10,6 +10,7 @@ pub enum OpCode {
     JumpIfFalse,
     LessThan,
     Equals,
+    RelativeBaseOffset,
     Stop,
 }
 
@@ -24,6 +25,7 @@ impl From<&str> for OpCode {
             "06" => OpCode::JumpIfFalse,
             "07" => OpCode::LessThan,
             "08" => OpCode::Equals,
+            "09" => OpCode::RelativeBaseOffset,
             "99" => OpCode::Stop,
             z => panic!("opcode failure! {}", z),
         }
@@ -34,6 +36,7 @@ impl From<&str> for OpCode {
 pub enum ParameterMode {
     Position,
     Immediate,
+    Relative,
 }
 
 impl From<char> for ParameterMode {
@@ -41,6 +44,7 @@ impl From<char> for ParameterMode {
         match x {
             '0' => ParameterMode::Position,
             '1' => ParameterMode::Immediate,
+            '2' => ParameterMode::Relative,
             _ => panic!("unrecognized parameter mode {}", x),
         }
     }
@@ -52,8 +56,8 @@ pub struct Instruction {
     params: (ParameterMode, ParameterMode, ParameterMode),
 }
 
-impl From<isize> for Instruction {
-    fn from(x: isize) -> Instruction {
+impl From<i128> for Instruction {
+    fn from(x: i128) -> Instruction {
         let s = format!("{:05}", x);
         let opcode = OpCode::from(&s[3..]);
         let mut chars = s.chars();
@@ -74,38 +78,39 @@ impl From<isize> for Instruction {
 
 #[derive(Default, Debug)]
 pub struct Computer {
-    pub program: Vec<isize>,
-    pub input_queue: VecDeque<isize>,
+    pub program: Vec<i128>,
+    pub input_queue: VecDeque<i128>,
     pos: usize,
 }
 
 impl Computer {
-    pub fn new(program: Vec<isize>, input: &[isize]) -> Self {
+    pub fn new(program: Vec<i128>, input: &[i128]) -> Self {
         Computer {
             program,
             input_queue: input.into_iter().cloned().collect(),
             pos: 0,
         }
     }
-    pub fn get_program(day: usize) -> Vec<isize> {
+    pub fn get_program(day: usize) -> Vec<i128> {
         super::get_input::main(day)
             .trim()
             .split(",")
-            .map(|z| isize::from_str_radix(z, 10).unwrap())
+            .map(|z| i128::from_str_radix(z, 10).unwrap())
             .collect()
     }
-    fn get_value(&self, index: usize, mode: ParameterMode) -> isize {
+    fn get_value(&self, index: usize, mode: ParameterMode) -> i128 {
         match mode {
             ParameterMode::Position => self.program[self.program[index] as usize],
             ParameterMode::Immediate => self.program[index],
+            ParameterMode::Relative => panic!("relative mode parameter not implemented yet!"),
         }
     }
 }
 
 impl<'a> Iterator for Computer {
-    type Item = isize;
+    type Item = i128;
 
-    fn next(&mut self) -> Option<isize> {
+    fn next(&mut self) -> Option<i128> {
         loop {
             let instruction = Instruction::from(self.program[self.pos]);
             match instruction.opcode {
@@ -171,6 +176,9 @@ impl<'a> Iterator for Computer {
                     self.pos += 2;
                     return Some(a);
                 }
+                OpCode::RelativeBaseOffset => {
+                    panic!("instruction RelativeBaseOffset not implemented yet!");
+                }
                 OpCode::Stop => {
                     return None;
                 }
@@ -185,7 +193,7 @@ mod tests {
 
     #[test]
     fn test_parse_input() {
-        let values: Vec<(isize, Instruction)> = vec![
+        let values: Vec<(i128, Instruction)> = vec![
             (1002, Instruction { opcode: OpCode::Multiply, params: (ParameterMode::Position, ParameterMode::Immediate, ParameterMode::Position) })
         ];
         for (input, answer) in values {
@@ -195,7 +203,7 @@ mod tests {
 
     #[test]
     fn test_program_with_negative_numbers() {
-        let program: Vec<isize> = vec![1101, 100, -1, 4, 0];
+        let program: Vec<i128> = vec![1101, 100, -1, 4, 0];
         let mut computer = Computer::new(program, &[0]);
         let output = computer.next();
         assert!(output.is_none());
@@ -204,7 +212,7 @@ mod tests {
 
     #[test]
     fn test_simple_program() {
-        let program: Vec<isize> = vec![1002, 4, 3, 4, 33];
+        let program: Vec<i128> = vec![1002, 4, 3, 4, 33];
         let mut computer = Computer::new(program, &[0]);
         let output = computer.next();
         assert!(output.is_none());
@@ -214,7 +222,7 @@ mod tests {
     #[test]
     fn test_comparisons_with_8() {
         // program, false input, truth input
-        let values: Vec<(Vec<isize>, isize, isize)> = vec![
+        let values: Vec<(Vec<i128>, i128, i128)> = vec![
             (vec![3, 9, 8, 9, 10, 9, 4, 9, 99, -1, 8], 2, 8), // equal to 8
             (vec![3, 9, 7, 9, 10, 9, 4, 9, 99, -1, 8], 9, 4), // less than 8
             (vec![3, 3, 1108, -1, 8, 3, 4, 3, 99], 9, 8), // equal to 8
@@ -230,8 +238,8 @@ mod tests {
 
     #[test]
     fn test_complex_program() {
-        let program: Vec<isize> = vec![3, 21, 1008, 21, 8, 20, 1005, 20, 22, 107, 8, 21, 20, 1006, 20, 31, 1106, 0, 36, 98, 0, 0, 1002, 21, 125, 20, 4, 20, 1105, 1, 46, 104, 999, 1105, 1, 46, 1101, 1000, 1, 20, 4, 20, 1105, 1, 46, 98, 99];
-        let values: Vec<(isize, isize)> = vec![
+        let program: Vec<i128> = vec![3, 21, 1008, 21, 8, 20, 1005, 20, 22, 107, 8, 21, 20, 1006, 20, 31, 1106, 0, 36, 98, 0, 0, 1002, 21, 125, 20, 4, 20, 1105, 1, 46, 104, 999, 1105, 1, 46, 1101, 1000, 1, 20, 4, 20, 1105, 1, 46, 98, 99];
+        let values: Vec<(i128, i128)> = vec![
             (7, 999),
             (8, 1000),
             (9, 1001),

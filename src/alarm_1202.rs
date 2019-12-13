@@ -9,7 +9,7 @@ pub fn solve_part_one() -> isize {
     };
     let mut computer = Computer::new(program, &[]);
     computer.next();
-    computer.program[0]
+    computer.program[0] as isize
 }
 
 pub fn solve_part_two() -> Option<isize> {
@@ -18,8 +18,8 @@ pub fn solve_part_two() -> Option<isize> {
         for verb in 0isize..100isize {
             let program = {
                 let mut cloned = program.clone();
-                cloned[1] = noun;
-                cloned[2] = verb;
+                cloned[1] = noun as i128;
+                cloned[2] = verb as i128;
                 cloned
             };
             let mut computer = Computer::new(program, &[]);
@@ -38,7 +38,7 @@ mod tests {
 
     #[test]
     fn test_run_opcodes() {
-        let cases: Vec<(Vec<isize>, Vec<isize>)> = vec![
+        let cases: Vec<(Vec<i128>, Vec<i128>)> = vec![
             (vec![1, 9, 10, 3, 2, 3, 11, 0, 99, 30, 40, 50], vec![3500, 9, 10, 70, 2, 3, 11, 0, 99, 30, 40, 50]),
             (vec![1, 0, 0, 0, 99], vec![2, 0, 0, 0, 99]),
             (vec![2, 3, 0, 3, 99], vec![2, 3, 0, 6, 99]),
