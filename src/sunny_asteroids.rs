@@ -1,13 +1,13 @@
 use super::intcode::Computer;
 
 pub fn solve_part_one() -> Vec<isize> {
-    let program = Computer::get_program(5);
+    let program = Computer::load_data(5);
     let computer = Computer::new(program, &[1]);
     computer.map(|elem| elem as isize).collect()
 }
 
 pub fn solve_part_two() -> isize {
-    let program = Computer::get_program(5);
+    let program = Computer::load_data(5);
     let computer = Computer::new(program, &[5]);
     computer.into_iter().last().unwrap() as isize
 }

@@ -1,30 +1,30 @@
 use super::intcode::Computer;
 
-pub fn solve_part_one() -> isize {
+pub fn solve_part_one() -> i64{
     let program = {
-        let mut x = Computer::get_program(2);
+        let mut x = Computer::load_data(2);
         x[1] = 12;
         x[2] = 2;
         x
     };
     let mut computer = Computer::new(program, &[]);
     computer.next();
-    computer.program[0] as isize
+    computer.program[&0]
 }
 
-pub fn solve_part_two() -> Option<isize> {
-    let program = Computer::get_program(2);
-    for noun in 0isize..100isize {
-        for verb in 0isize..100isize {
+pub fn solve_part_two() -> Option<i64> {
+    let program = Computer::load_data(2);
+    for noun in 0i64..100i64 {
+        for verb in 0i64..100i64 {
             let program = {
                 let mut cloned = program.clone();
-                cloned[1] = noun as i128;
-                cloned[2] = verb as i128;
+                cloned[1] = noun;
+                cloned[2] = verb;
                 cloned
             };
             let mut computer = Computer::new(program, &[]);
             computer.next();
-            if computer.program[0] == 19690720 {
+            if computer.program[&0] == 19690720 {
                 return Option::Some(100 * noun + verb);
             }
         }
@@ -38,7 +38,7 @@ mod tests {
 
     #[test]
     fn test_run_opcodes() {
-        let cases: Vec<(Vec<i128>, Vec<i128>)> = vec![
+        let cases: Vec<(Vec<i64>, Vec<i64>)> = vec![
             (vec![1, 9, 10, 3, 2, 3, 11, 0, 99, 30, 40, 50], vec![3500, 9, 10, 70, 2, 3, 11, 0, 99, 30, 40, 50]),
             (vec![1, 0, 0, 0, 99], vec![2, 0, 0, 0, 99]),
             (vec![2, 3, 0, 3, 99], vec![2, 3, 0, 6, 99]),
@@ -47,7 +47,7 @@ mod tests {
         for (program, expected) in cases {
             let mut computer = Computer::new(program, &[]);
             computer.next();
-            assert_eq!(computer.program, expected);
+            assert_eq!(computer.get_program(), expected);
         }
     }
 
