@@ -2,6 +2,7 @@
 extern crate itertools;
 #[macro_use]
 extern crate lazy_static;
+extern crate num;
 
 pub mod intcode;
 pub mod tyranny_of_rocket;
@@ -14,3 +15,4 @@ pub mod universal_orbit_map;
 pub mod amplification_circuit;
 pub mod space_image;
 pub mod sensor_boost;
+pub mod monitoring_station;
