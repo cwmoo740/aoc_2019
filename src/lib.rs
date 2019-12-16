@@ -16,3 +16,4 @@ pub mod amplification_circuit;
 pub mod space_image;
 pub mod sensor_boost;
 pub mod monitoring_station;
+pub mod space_police;
