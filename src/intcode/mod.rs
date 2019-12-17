@@ -80,6 +80,7 @@ impl From<i64> for Instruction {
 pub struct Computer {
     pub program: HashMap<i64, i64>,
     pub input_queue: VecDeque<i64>,
+    default_input: i64,
     pos: i64,
     relative_base: i64,
 }
@@ -98,6 +99,7 @@ impl Computer {
                     },
                 ),
             input_queue: input.into_iter().cloned().collect(),
+            default_input: 0,
             pos: 0,
             relative_base: 0,
         }
@@ -116,6 +118,12 @@ impl Computer {
             result[i as usize] = v;
         }
         result
+    }
+    pub fn set_default_input(&mut self, value: i64) {
+        self.default_input = value;
+    }
+    fn get_instruction(&self) -> Instruction {
+        Instruction::from(self.program[&self.pos])
     }
     fn get_value(&mut self, index: i64, mode: ParameterMode) -> i64 {
         let a = *self.program.entry(index).or_insert(0);
@@ -140,7 +148,7 @@ impl<'a> Iterator for Computer {
 
     fn next(&mut self) -> Option<i64> {
         loop {
-            let instruction = Instruction::from(self.program[&self.pos]);
+            let instruction = self.get_instruction();
             match instruction.opcode {
                 OpCode::Add => {
                     let a = self.get_value(self.pos + 1, instruction.params.0);
@@ -197,7 +205,7 @@ impl<'a> Iterator for Computer {
                     self.pos += 4;
                 }
                 OpCode::Input => {
-                    let value = self.input_queue.pop_front().unwrap();
+                    let value = self.input_queue.pop_front().unwrap_or(self.default_input);
                     self.write(self.pos + 1, value, instruction.params.0);
                     self.pos += 2;
                 }

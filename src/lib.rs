@@ -18,3 +18,4 @@ pub mod sensor_boost;
 pub mod monitoring_station;
 pub mod space_police;
 pub mod n_body_problem;
+pub mod care_package;
