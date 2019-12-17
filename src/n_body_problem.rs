@@ -77,6 +77,7 @@ struct Moon {
 }
 
 impl Moon {
+    #[cfg(test)]
     fn new(x: isize, y: isize, z: isize) -> Self {
         Moon {
             velocity: Velocity::default(),
@@ -87,6 +88,7 @@ impl Moon {
             },
         }
     }
+    #[cfg(test)]
     fn with_velocity(&mut self, dx: isize, dy: isize, dz: isize) -> Self {
         self.velocity = Velocity { dx, dy, dz };
         *self
