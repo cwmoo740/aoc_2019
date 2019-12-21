@@ -3,6 +3,7 @@ extern crate itertools;
 #[macro_use]
 extern crate lazy_static;
 extern crate num;
+extern crate pathfinding;
 
 pub mod intcode;
 pub mod tyranny_of_rocket;
@@ -20,3 +21,4 @@ pub mod space_police;
 pub mod n_body_problem;
 pub mod care_package;
 pub mod space_stoichiometry;
+pub mod oxygen_system;
