@@ -40,7 +40,6 @@ struct Direction {
     dy: isize,
 }
 
-
 impl Direction {
     pub fn up() -> Self {
         Direction { dx: 0, dy: 1 }
@@ -60,7 +59,7 @@ impl Direction {
             (1, 0, Turn::RIGHT) | (-1, 0, Turn::LEFT) => Direction::down(),
             (0, 1, Turn::RIGHT) | (0, -1, Turn::LEFT) => Direction::right(),
             (0, 1, Turn::LEFT) | (0, -1, Turn::RIGHT) => Direction::left(),
-            _ => panic!("movement not understood! {:?}, {:?}", self, turn)
+            _ => panic!("movement not understood! {:?}, {:?}", self, turn),
         }
     }
 }
@@ -117,7 +116,10 @@ impl Iterator for Robot {
     type Item = (isize, isize);
 
     fn next(&mut self) -> Option<(isize, isize)> {
-        let current_color = *self.map.entry(self.position.as_tuple()).or_insert(Color::BLACK);
+        let current_color = *self
+            .map
+            .entry(self.position.as_tuple())
+            .or_insert(Color::BLACK);
         self.input_current_color(&current_color);
         let color_to_paint = {
             if let Some(next_color) = self.computer.next() {

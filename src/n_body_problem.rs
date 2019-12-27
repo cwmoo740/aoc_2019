@@ -81,11 +81,7 @@ impl Moon {
     fn new(x: isize, y: isize, z: isize) -> Self {
         Moon {
             velocity: Velocity::default(),
-            position: Position {
-                x,
-                y,
-                z,
-            },
+            position: Position { x, y, z },
         }
     }
     #[cfg(test)]
@@ -102,7 +98,7 @@ fn compare_axis(a: isize, b: isize) -> (isize, isize) {
     match a.cmp(&b) {
         Ordering::Greater => (-1, 1),
         Ordering::Less => (1, -1),
-        Ordering::Equal => (0, 0)
+        Ordering::Equal => (0, 0),
     }
 }
 
@@ -156,19 +152,16 @@ impl SolarSystem {
         self.moons
             .iter()
             .zip(other.moons.iter())
-            .map(|(a, b)| (
-                a.position.x == b.position.x && a.velocity.dx == b.velocity.dx,
-                a.position.y == b.position.y && a.velocity.dy == b.velocity.dy,
-                a.position.z == b.position.z && a.velocity.dz == b.velocity.dz,
-            ))
-            .fold(
-                (true, true, true),
-                |(x_r, y_r, z_r), (x, y, z)| (
-                    x_r && x,
-                    y_r && y,
-                    z_r && z
-                ),
-            )
+            .map(|(a, b)| {
+                (
+                    a.position.x == b.position.x && a.velocity.dx == b.velocity.dx,
+                    a.position.y == b.position.y && a.velocity.dy == b.velocity.dy,
+                    a.position.z == b.position.z && a.velocity.dz == b.velocity.dz,
+                )
+            })
+            .fold((true, true, true), |(x_r, y_r, z_r), (x, y, z)| {
+                (x_r && x, y_r && y, z_r && z)
+            })
     }
 }
 
@@ -177,7 +170,10 @@ impl From<String> for SolarSystem {
         let moons = x
             .trim()
             .lines()
-            .map(|line| Moon { position: Position::from(line), velocity: Velocity::default() })
+            .map(|line| Moon {
+                position: Position::from(line),
+                velocity: Velocity::default(),
+            })
             .collect::<Vec<Moon>>();
         SolarSystem { moons }
     }

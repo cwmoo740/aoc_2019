@@ -17,20 +17,31 @@ impl Graph {
         let mut items = x.trim().split(")");
         let parent = items.next().unwrap();
         let child = items.next().unwrap();
-        self.planets.entry(child.to_string()).or_insert(HashSet::new());
-        let entry = self.planets.entry(parent.to_string()).or_insert(HashSet::new());
+        self.planets
+            .entry(child.to_string())
+            .or_insert(HashSet::new());
+        let entry = self
+            .planets
+            .entry(parent.to_string())
+            .or_insert(HashSet::new());
         entry.insert(child.to_string());
     }
     fn make_bidirectional(&mut self) {
-        let new_edges: Vec<(String, String)> = self.planets
+        let new_edges: Vec<(String, String)> = self
+            .planets
             .iter()
             .flat_map(|(parent, children)| {
-                children.iter().map(move |child| (child.clone(), parent.clone()))
+                children
+                    .iter()
+                    .map(move |child| (child.clone(), parent.clone()))
             })
             .collect();
 
         for (child, parent) in new_edges {
-            self.planets.entry(child).or_insert(HashSet::new()).insert(parent);
+            self.planets
+                .entry(child)
+                .or_insert(HashSet::new())
+                .insert(parent);
         }
     }
     fn bfs(&self, start: &str, dest: &str) -> Option<Vec<String>> {
@@ -39,7 +50,8 @@ impl Graph {
         queue.push_back(start.to_string());
         while !queue.is_empty() {
             let current = queue.pop_front().unwrap();
-            let children = self.planets
+            let children = self
+                .planets
                 .get(&current)
                 .unwrap()
                 .iter()
@@ -120,7 +132,10 @@ mod tests {
 
     #[test]
     fn test_simple_graph() {
-        let input: String = "COM)B,B)C,C)D,D)E,E)F,B)G,G)H,D)I,E)J,J)K,K)L".split(",").collect::<Vec<&str>>().join("\n");
+        let input: String = "COM)B,B)C,C)D,D)E,E)F,B)G,G)H,D)I,E)J,J)K,K)L"
+            .split(",")
+            .collect::<Vec<&str>>()
+            .join("\n");
         assert_eq!(count_orbits(&input), 42);
     }
 
@@ -130,16 +145,31 @@ mod tests {
         let mut graph = Graph::from(input);
         graph.make_bidirectional();
         let mut expected_hashmap: HashMap<String, HashSet<String>> = HashMap::new();
-        expected_hashmap.insert("COM".to_string(), ["B".to_string()].iter().cloned().collect());
-        expected_hashmap.insert("B".to_string(), ["COM".to_string(), "C".to_string()].iter().cloned().collect());
-        expected_hashmap.insert("C".to_string(), ["B".to_string(), "D".to_string()].iter().cloned().collect());
+        expected_hashmap.insert(
+            "COM".to_string(),
+            ["B".to_string()].iter().cloned().collect(),
+        );
+        expected_hashmap.insert(
+            "B".to_string(),
+            ["COM".to_string(), "C".to_string()]
+                .iter()
+                .cloned()
+                .collect(),
+        );
+        expected_hashmap.insert(
+            "C".to_string(),
+            ["B".to_string(), "D".to_string()].iter().cloned().collect(),
+        );
         expected_hashmap.insert("D".to_string(), ["C".to_string()].iter().cloned().collect());
         assert_eq!(graph.planets, expected_hashmap);
     }
 
     #[test]
     fn test_navigation() {
-        let input: String = "COM)B,B)C,C)D,D)E,E)F,B)G,G)H,D)I,E)J,J)K,K)L,K)YOU,I)SAN".split(",").collect::<Vec<&str>>().join("\n");
+        let input: String = "COM)B,B)C,C)D,D)E,E)F,B)G,G)H,D)I,E)J,J)K,K)L,K)YOU,I)SAN"
+            .split(",")
+            .collect::<Vec<&str>>()
+            .join("\n");
         assert_eq!(navigate_to_santa(&input) - 3, 4);
     }
 

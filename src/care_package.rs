@@ -11,25 +11,23 @@ struct Game {
 impl Game {
     fn play(&mut self) -> i64 {
         loop {
-            match (self.computer.next(), self.computer.next(), self.computer.next()) {
-                (Some(-1), Some(0), Some(score)) => {
-                    self.score = score
-                }
-                (Some(x), Some(y), Some(3)) => {
-                    self.paddle = (x, y)
-                }
-                (Some(x), Some(y), Some(4)) => {
-                    self.ball = (x, y)
-                }
+            match (
+                self.computer.next(),
+                self.computer.next(),
+                self.computer.next(),
+            ) {
+                (Some(-1), Some(0), Some(score)) => self.score = score,
+                (Some(x), Some(y), Some(3)) => self.paddle = (x, y),
+                (Some(x), Some(y), Some(4)) => self.ball = (x, y),
                 (None, None, None) => break,
                 (_, _, _) => (),
             }
-            self.computer.set_default_input((self.ball.0 - self.paddle.0).signum())
+            self.computer
+                .set_default_input((self.ball.0 - self.paddle.0).signum())
         }
         self.score
     }
 }
-
 
 pub fn solve_part_one() -> usize {
     let computer = Computer::new(Computer::load_data(13), &[]);

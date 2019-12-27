@@ -150,15 +150,15 @@ pub fn solve_part_one() -> usize {
 */
 pub fn solve_part_two() -> i64 {
     let input: Vec<i64> = concat!(
-        "A,B,A,B,C,B,C,A,C,C\n",
-        "R,12,L,10,L,10\n",
-        "L,6,L,12,R,12,L,4\n",
-        "L,12,R,12,L,6\n",
-        "n\n"
+    "A,B,A,B,C,B,C,A,C,C\n",
+    "R,12,L,10,L,10\n",
+    "L,6,L,12,R,12,L,4\n",
+    "L,12,R,12,L,6\n",
+    "n\n"
     )
-    .chars()
-    .map(|x| x as i64)
-    .collect();
+        .chars()
+        .map(|x| x as i64)
+        .collect();
 
     let mut data = Computer::load_data(17);
     data[0] = 2;

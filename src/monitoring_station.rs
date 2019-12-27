@@ -1,7 +1,7 @@
-use std::collections::{HashSet, HashMap};
+use std::collections::{HashMap, HashSet};
 
-use num::integer::gcd;
 use itertools::Itertools;
+use num::integer::gcd;
 
 type Coordinate = (usize, usize);
 type Slope = (isize, isize);
@@ -17,13 +17,10 @@ fn destroyed_asteroids(asteroids: &AsteroidMap, laser_coordinate: &Coordinate) -
             b_dist.partial_cmp(&a_dist).unwrap()
         })
         .map(|coord| (coord, slope_between(laser_coordinate, &coord)))
-        .fold(
-            HashMap::new(),
-            |mut acc, (coord, slope)| {
-                acc.entry(slope).or_insert(Vec::new()).push(*coord);
-                acc
-            },
-        );
+        .fold(HashMap::new(), |mut acc, (coord, slope)| {
+            acc.entry(slope).or_insert(Vec::new()).push(*coord);
+            acc
+        });
 
     let keys = categories
         .keys()
@@ -86,8 +83,7 @@ fn parse_map(input: &str) -> AsteroidMap {
         .lines()
         .enumerate()
         .flat_map(|(y, line)| {
-            line
-                .trim()
+            line.trim()
                 .chars()
                 .enumerate()
                 .filter(|(_, ch)| *ch == '#')
@@ -123,7 +119,18 @@ mod tests {
                            ...##";
         assert_eq!(
             parse_map(input),
-            [(1, 0), (4, 0), (0, 2), (1, 2), (2, 2), (3, 2), (4, 2), (4, 3), (3, 4), (4, 4)]
+            [
+                (1, 0),
+                (4, 0),
+                (0, 2),
+                (1, 2),
+                (2, 2),
+                (3, 2),
+                (4, 2),
+                (4, 3),
+                (3, 4),
+                (4, 4)
+            ]
                 .iter()
                 .cloned()
                 .collect::<AsteroidMap>()
@@ -173,7 +180,7 @@ mod tests {
                  ......#...
                  .####.###.",
                 (1, 2),
-            )
+            ),
         ];
         for (input, expected) in values {
             assert_eq!(best_asteroid(&parse_map(input)), expected);
@@ -189,8 +196,21 @@ mod tests {
                            ..#.#.....#....##";
         let asteroids = parse_map(input);
         assert_eq!(
-            destroyed_asteroids(&asteroids, &(8, 3)).into_iter().take(9).collect::<Vec<Coordinate>>(),
-            vec![(8, 1), (9, 0), (9, 1), (10, 0), (9, 2), (11, 1), (12, 1), (11, 2), (15, 1)]
+            destroyed_asteroids(&asteroids, &(8, 3))
+                .into_iter()
+                .take(9)
+                .collect::<Vec<Coordinate>>(),
+            vec![
+                (8, 1),
+                (9, 0),
+                (9, 1),
+                (10, 0),
+                (9, 2),
+                (11, 1),
+                (12, 1),
+                (11, 2),
+                (15, 1)
+            ]
         );
     }
 

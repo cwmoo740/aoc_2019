@@ -20,7 +20,6 @@ struct Move {
     magnitude: isize,
 }
 
-
 impl FromStr for Move {
     type Err = ParseIntError;
 
@@ -37,12 +36,10 @@ impl FromStr for Move {
                 _ => panic!("something terrible happened!"),
             };
             let mag = isize::from_str(&caps["mag"]).unwrap();
-            return Ok(
-                Move {
-                    magnitude: mag,
-                    direction: dir,
-                }
-            );
+            return Ok(Move {
+                magnitude: mag,
+                direction: dir,
+            });
         }
         panic!("never found a match: {}", s);
     }
@@ -61,10 +58,22 @@ impl Add<&Move> for &Coordinate {
 
     fn add(self, rhs: &Move) -> Coordinate {
         match rhs.direction {
-            Direction::L => Coordinate { x: self.x - rhs.magnitude, y: self.y },
-            Direction::U => Coordinate { x: self.x, y: self.y + rhs.magnitude },
-            Direction::R => Coordinate { x: self.x + rhs.magnitude, y: self.y },
-            Direction::D => Coordinate { x: self.x, y: self.y - rhs.magnitude },
+            Direction::L => Coordinate {
+                x: self.x - rhs.magnitude,
+                y: self.y,
+            },
+            Direction::U => Coordinate {
+                x: self.x,
+                y: self.y + rhs.magnitude,
+            },
+            Direction::R => Coordinate {
+                x: self.x + rhs.magnitude,
+                y: self.y,
+            },
+            Direction::D => Coordinate {
+                x: self.x,
+                y: self.y - rhs.magnitude,
+            },
         }
     }
 }
@@ -96,7 +105,12 @@ fn parse_input(input: String) -> (Vec<Coordinate>, Vec<Coordinate>) {
     (moves.next().unwrap(), moves.next().unwrap())
 }
 
-fn overlapping_coordinate(p0: &Coordinate, p1: &Coordinate, p2: &Coordinate, p3: &Coordinate) -> Option<Coordinate> {
+fn overlapping_coordinate(
+    p0: &Coordinate,
+    p1: &Coordinate,
+    p2: &Coordinate,
+    p3: &Coordinate,
+) -> Option<Coordinate> {
     let p0_x = p0.x as f64;
     let p0_y = p0.y as f64;
 
@@ -131,7 +145,10 @@ fn manhattan_distance(x: &Coordinate, y: &Coordinate) -> usize {
     ((x.x - y.x).abs() + (x.y - y.y).abs()) as usize
 }
 
-fn find_closest_intersection_by_manhattan_distance(wire0: &Vec<Coordinate>, wire1: &Vec<Coordinate>) -> Option<Coordinate> {
+fn find_closest_intersection_by_manhattan_distance(
+    wire0: &Vec<Coordinate>,
+    wire1: &Vec<Coordinate>,
+) -> Option<Coordinate> {
     let mut intersection_points: Vec<Coordinate> = vec![];
     for (x0, y0) in wire0.iter().zip(wire0[1..].iter()) {
         for (x1, y1) in wire1.iter().zip(wire1[1..].iter()) {
@@ -153,12 +170,10 @@ fn find_closest_intersection_by_manhattan_distance(wire0: &Vec<Coordinate>, wire
                 m1.cmp(&m2)
             })
             .unwrap();
-        Some(
-            Coordinate {
-                x: min_point.x,
-                y: min_point.y,
-            }
-        )
+        Some(Coordinate {
+            x: min_point.x,
+            y: min_point.y,
+        })
     }
 }
 
@@ -172,7 +187,10 @@ pub fn solve_part_one() -> Option<usize> {
     }
 }
 
-fn find_closest_intersection_by_wire_length(wire0: &Vec<Coordinate>, wire1: &Vec<Coordinate>) -> Option<(Coordinate, usize)> {
+fn find_closest_intersection_by_wire_length(
+    wire0: &Vec<Coordinate>,
+    wire1: &Vec<Coordinate>,
+) -> Option<(Coordinate, usize)> {
     let mut d0: usize = 0;
     let mut d1: usize;
     let mut intersection_points: Vec<(Coordinate, usize)> = vec![];
@@ -183,7 +201,9 @@ fn find_closest_intersection_by_wire_length(wire0: &Vec<Coordinate>, wire1: &Vec
             d1 += manhattan_distance(x1, y1);
             if let Some(overlap) = overlapping_coordinate(x0, y0, x1, y1) {
                 if overlap != ZERO_COORDINATE {
-                    let distance = d0 + d1 - manhattan_distance(y0, &overlap) - manhattan_distance(y1, &overlap);
+                    let distance = d0 + d1
+                        - manhattan_distance(y0, &overlap)
+                        - manhattan_distance(y1, &overlap);
                     intersection_points.push((overlap, distance));
                 }
             }
@@ -196,12 +216,13 @@ fn find_closest_intersection_by_wire_length(wire0: &Vec<Coordinate>, wire1: &Vec
             .iter()
             .min_by_key(|(_, distance)| *distance)
             .unwrap();
-        Some(
-            (
-                Coordinate { x: point.x, y: point.y },
-                *distance
-            )
-        )
+        Some((
+            Coordinate {
+                x: point.x,
+                y: point.y,
+            },
+            *distance,
+        ))
     }
 }
 
@@ -222,10 +243,34 @@ mod tests {
     #[test]
     fn test_move_from_str() {
         let values: Vec<(&str, Move)> = vec![
-            ("R7", Move { direction: Direction::R, magnitude: 7 }),
-            ("D273", Move { direction: Direction::D, magnitude: 273 }),
-            ("L21", Move { direction: Direction::L, magnitude: 21 }),
-            ("U3", Move { direction: Direction::U, magnitude: 3 }),
+            (
+                "R7",
+                Move {
+                    direction: Direction::R,
+                    magnitude: 7,
+                },
+            ),
+            (
+                "D273",
+                Move {
+                    direction: Direction::D,
+                    magnitude: 273,
+                },
+            ),
+            (
+                "L21",
+                Move {
+                    direction: Direction::L,
+                    magnitude: 21,
+                },
+            ),
+            (
+                "U3",
+                Move {
+                    direction: Direction::U,
+                    magnitude: 3,
+                },
+            ),
         ];
         for (x, y) in values {
             assert_eq!(Move::from_str(x).unwrap(), y);
@@ -234,17 +279,14 @@ mod tests {
 
     #[test]
     fn test_parse_path() {
-        let values: Vec<(String, Vec<(isize, isize)>)> = vec![
-            (
-                "R3,D2,L4".to_string(),
-                vec![(0, 0), (3, 0), (3, -2), (-1, -2)],
-            )
-        ];
+        let values: Vec<(String, Vec<(isize, isize)>)> = vec![(
+            "R3,D2,L4".to_string(),
+            vec![(0, 0), (3, 0), (3, -2), (-1, -2)],
+        )];
         for (x, res) in values {
             assert_eq!(
                 parse_path(&x),
-                res
-                    .into_iter()
+                res.into_iter()
                     .map(|(x, y)| Coordinate { x, y })
                     .collect::<Vec<Coordinate>>()
             );
@@ -254,10 +296,14 @@ mod tests {
     #[test]
     fn test_find_closest_intersection_by_manhattan_distance() {
         let input = "R75,D30,R83,U83,L12,D49,R71,U7,L72
-U62,R66,U55,R34,D71,R55,D58,R83".to_string();
+U62,R66,U55,R34,D71,R55,D58,R83"
+            .to_string();
         let (wire0, wire1) = parse_input(input);
         assert_eq!(
-            manhattan_distance(&find_closest_intersection_by_manhattan_distance(&wire0, &wire1).unwrap(), &ZERO_COORDINATE),
+            manhattan_distance(
+                &find_closest_intersection_by_manhattan_distance(&wire0, &wire1).unwrap(),
+                &ZERO_COORDINATE,
+            ),
             159,
         );
     }
@@ -270,9 +316,13 @@ U62,R66,U55,R34,D71,R55,D58,R83".to_string();
     #[test]
     fn test_find_closest_intersection_by_wire_length() {
         let input = "R75,D30,R83,U83,L12,D49,R71,U7,L72
-U62,R66,U55,R34,D71,R55,D58,R83".to_string();
+U62,R66,U55,R34,D71,R55,D58,R83"
+            .to_string();
         let (wire0, wire1) = parse_input(input);
-        assert_eq!(find_closest_intersection_by_wire_length(&wire0, &wire1), Some((Coordinate { x: 158, y: -12 }, 610)));
+        assert_eq!(
+            find_closest_intersection_by_wire_length(&wire0, &wire1),
+            Some((Coordinate { x: 158, y: -12 }, 610))
+        );
     }
 
     #[test]

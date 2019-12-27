@@ -1,6 +1,6 @@
 use super::intcode::Computer;
 
-pub fn solve_part_one() -> i64{
+pub fn solve_part_one() -> i64 {
     let program = {
         let mut x = Computer::load_data(2);
         x[1] = 12;
@@ -39,10 +39,16 @@ mod tests {
     #[test]
     fn test_run_opcodes() {
         let cases: Vec<(Vec<i64>, Vec<i64>)> = vec![
-            (vec![1, 9, 10, 3, 2, 3, 11, 0, 99, 30, 40, 50], vec![3500, 9, 10, 70, 2, 3, 11, 0, 99, 30, 40, 50]),
+            (
+                vec![1, 9, 10, 3, 2, 3, 11, 0, 99, 30, 40, 50],
+                vec![3500, 9, 10, 70, 2, 3, 11, 0, 99, 30, 40, 50],
+            ),
             (vec![1, 0, 0, 0, 99], vec![2, 0, 0, 0, 99]),
             (vec![2, 3, 0, 3, 99], vec![2, 3, 0, 6, 99]),
-            (vec![1, 1, 1, 4, 99, 5, 6, 0, 99], vec![30, 1, 1, 4, 2, 5, 6, 0, 99]),
+            (
+                vec![1, 1, 1, 4, 99, 5, 6, 0, 99],
+                vec![30, 1, 1, 4, 2, 5, 6, 0, 99],
+            ),
         ];
         for (program, expected) in cases {
             let mut computer = Computer::new(program, &[]);

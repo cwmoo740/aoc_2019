@@ -4,10 +4,7 @@ struct Dimensions {
 }
 
 fn count_zeros(chars: &Vec<char>) -> usize {
-    chars
-        .into_iter()
-        .filter(|&ch| *ch == '0')
-        .count()
+    chars.into_iter().filter(|&ch| *ch == '0').count()
 }
 
 fn layer_with_fewest_zeros(layers: Vec<Vec<char>>) -> Vec<char> {
@@ -27,10 +24,7 @@ fn to_layers(input: String, dimensions: &Dimensions) -> Vec<Vec<char>> {
 }
 
 fn count_digit(layer: &[char], ch: char) -> usize {
-    layer
-        .into_iter()
-        .filter(|&&x| x == ch)
-        .count()
+    layer.into_iter().filter(|&&x| x == ch).count()
 }
 
 fn create_composite(layers: Vec<Vec<char>>) -> Vec<char> {
@@ -68,14 +62,23 @@ fn print_image(img: &Vec<char>, dimensions: &Dimensions) -> bool {
 
 pub fn solve_part_one() -> usize {
     let input = super::get_input::main(8);
-    let layers = to_layers(input, &Dimensions { width: 25, height: 6 });
+    let layers = to_layers(
+        input,
+        &Dimensions {
+            width: 25,
+            height: 6,
+        },
+    );
     let fewest_zeros = layer_with_fewest_zeros(layers);
     count_digit(&fewest_zeros, '1') * count_digit(&fewest_zeros, '2')
 }
 
 pub fn solve_part_two() -> Vec<char> {
     let input = super::get_input::main(8);
-    let dimensions = Dimensions { width: 25, height: 6 };
+    let dimensions = Dimensions {
+        width: 25,
+        height: 6,
+    };
     let layers = to_layers(input, &dimensions);
     let composite = create_composite(layers);
     print_image(&composite, &dimensions);
@@ -89,12 +92,13 @@ mod tests {
     #[test]
     fn test_layer_with_fewest_zeros() {
         assert_eq!(
-            layer_with_fewest_zeros(
-                to_layers(
-                    "123456789012".to_string(),
-                    &Dimensions { width: 3, height: 2 },
-                )
-            )
+            layer_with_fewest_zeros(to_layers(
+                "123456789012".to_string(),
+                &Dimensions {
+                    width: 3,
+                    height: 2,
+                },
+            ))
                 .iter()
                 .collect::<String>()
                 .parse::<usize>()
@@ -106,12 +110,13 @@ mod tests {
     #[test]
     fn test_create_composite() {
         assert_eq!(
-            create_composite(
-                to_layers(
-                    "0222112222120000".to_string(),
-                    &Dimensions { width: 2, height: 2 },
-                )
-            ),
+            create_composite(to_layers(
+                "0222112222120000".to_string(),
+                &Dimensions {
+                    width: 2,
+                    height: 2,
+                },
+            )),
             vec!['0', '1', '1', '0'],
         );
     }
@@ -124,7 +129,17 @@ mod tests {
     #[test]
     fn test_solve_part_two() {
         let result = solve_part_two();
-        let expected: Vec<char> = vec!['1', '0', '0', '0', '0', '1', '0', '0', '1', '0', '0', '1', '1', '0', '0', '1', '1', '1', '0', '0', '1', '0', '0', '1', '0', '1', '0', '0', '0', '0', '1', '0', '0', '1', '0', '1', '0', '0', '1', '0', '1', '0', '0', '1', '0', '1', '0', '0', '1', '0', '1', '0', '0', '0', '0', '1', '1', '1', '1', '0', '1', '0', '0', '0', '0', '1', '0', '0', '1', '0', '1', '1', '1', '1', '0', '1', '0', '0', '0', '0', '1', '0', '0', '1', '0', '1', '0', '0', '0', '0', '1', '1', '1', '0', '0', '1', '0', '0', '1', '0', '1', '0', '0', '0', '0', '1', '0', '0', '1', '0', '1', '0', '0', '1', '0', '1', '0', '0', '0', '0', '1', '0', '0', '1', '0', '1', '1', '1', '1', '0', '1', '0', '0', '1', '0', '0', '1', '1', '0', '0', '1', '0', '0', '0', '0', '1', '0', '0', '1', '0'];
+        let expected: Vec<char> = vec![
+            '1', '0', '0', '0', '0', '1', '0', '0', '1', '0', '0', '1', '1', '0', '0', '1', '1',
+            '1', '0', '0', '1', '0', '0', '1', '0', '1', '0', '0', '0', '0', '1', '0', '0', '1',
+            '0', '1', '0', '0', '1', '0', '1', '0', '0', '1', '0', '1', '0', '0', '1', '0', '1',
+            '0', '0', '0', '0', '1', '1', '1', '1', '0', '1', '0', '0', '0', '0', '1', '0', '0',
+            '1', '0', '1', '1', '1', '1', '0', '1', '0', '0', '0', '0', '1', '0', '0', '1', '0',
+            '1', '0', '0', '0', '0', '1', '1', '1', '0', '0', '1', '0', '0', '1', '0', '1', '0',
+            '0', '0', '0', '1', '0', '0', '1', '0', '1', '0', '0', '1', '0', '1', '0', '0', '0',
+            '0', '1', '0', '0', '1', '0', '1', '1', '1', '1', '0', '1', '0', '0', '1', '0', '0',
+            '1', '1', '0', '0', '1', '0', '0', '0', '0', '1', '0', '0', '1', '0',
+        ];
         assert_eq!(result, expected);
     }
 }

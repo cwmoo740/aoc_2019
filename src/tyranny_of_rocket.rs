@@ -1,6 +1,5 @@
 fn parse_input(x: &String) -> Vec<isize> {
-    x
-        .split_whitespace()
+    x.split_whitespace()
         .map(|z| z.parse::<isize>())
         .collect::<Result<Vec<_>, _>>()
         .unwrap()
@@ -22,10 +21,7 @@ fn calc_fuel_complicated(weight: isize) -> isize {
 
 pub fn solve_part_one() -> isize {
     let input = super::get_input::main(1);
-    parse_input(&input)
-        .into_iter()
-        .map(calc_fuel)
-        .sum()
+    parse_input(&input).into_iter().map(calc_fuel).sum()
 }
 
 pub fn solve_part_two() -> isize {
@@ -45,7 +41,8 @@ mod tests {
         let input_str = "12
         14
         1969
-        100756".to_string();
+        100756"
+            .to_string();
         assert_eq!(parse_input(&input_str), vec![12, 14, 1969, 100756]);
     }
 

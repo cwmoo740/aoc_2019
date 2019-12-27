@@ -50,7 +50,8 @@ fn get_required_ore(fuel_quantity: usize, reactions: &Reactions) -> usize {
                     let reaction_multiplier = ((quantity - 1) / *reaction_quantity) + 1;
                     *extra_chemical = reaction_quantity * reaction_multiplier - quantity;
                     for (reagent_quantity, reagent_chemical) in reagents {
-                        required.push_back((reagent_chemical, reagent_quantity * reaction_multiplier));
+                        required
+                            .push_back((reagent_chemical, reagent_quantity * reaction_multiplier));
                     }
                 }
             }
@@ -104,38 +105,40 @@ mod test {
                7 A, 1 B => 1 C
                7 A, 1 C => 1 D
                7 A, 1 D => 1 E
-               7 A, 1 E => 1 FUEL"
+               7 A, 1 E => 1 FUEL",
         )
     }
 
     #[test]
     fn test_parse_input() {
-        assert_eq!(
-            parse_input(get_test_input()),
-            {
-                let mut reactions: Reactions = HashMap::new();
-                let entries: Vec<(&str, (usize, Vec<(usize, &str)>))> = vec![
-                    ("A", (10, vec![(10, "ORE")])),
-                    ("B", (1, vec![(1, "ORE")])),
-                    ("C", (1, vec![(7, "A"), (1, "B")])),
-                    ("D", (1, vec![(7, "A"), (1, "C")])),
-                    ("E", (1, vec![(7, "A"), (1, "D")])),
-                    ("FUEL", (1, vec![(7, "A"), (1, "E")])),
-                ];
-                for (key, (quantity, val)) in entries {
-                    reactions.insert(key.to_string(), (quantity, val.into_iter().map(|(q, reagent)| (q, reagent.to_string())).collect()));
-                }
-                reactions
-            },
-        )
+        assert_eq!(parse_input(get_test_input()), {
+            let mut reactions: Reactions = HashMap::new();
+            let entries: Vec<(&str, (usize, Vec<(usize, &str)>))> = vec![
+                ("A", (10, vec![(10, "ORE")])),
+                ("B", (1, vec![(1, "ORE")])),
+                ("C", (1, vec![(7, "A"), (1, "B")])),
+                ("D", (1, vec![(7, "A"), (1, "C")])),
+                ("E", (1, vec![(7, "A"), (1, "D")])),
+                ("FUEL", (1, vec![(7, "A"), (1, "E")])),
+            ];
+            for (key, (quantity, val)) in entries {
+                reactions.insert(
+                    key.to_string(),
+                    (
+                        quantity,
+                        val.into_iter()
+                            .map(|(q, reagent)| (q, reagent.to_string()))
+                            .collect(),
+                    ),
+                );
+            }
+            reactions
+        }, )
     }
 
     #[test]
     fn test_produce_fuel() {
-        assert_eq!(
-            get_required_ore(1, &parse_input(get_test_input())),
-            31,
-        )
+        assert_eq!(get_required_ore(1, &parse_input(get_test_input())), 31, )
     }
 
     #[test]
@@ -158,11 +161,9 @@ mod test {
             7 DCFZ, 7 PSHF => 2 XJWVT
             165 ORE => 2 GPVTF
             3 DCFZ, 7 NZVS, 5 HKGWZ, 10 PSHF => 8 KHKGT
-        ".to_string();
-        assert_eq!(
-            binary_search(1000000000000, &parse_input(input)),
-            82892753
-        );
+        "
+            .to_string();
+        assert_eq!(binary_search(1000000000000, &parse_input(input)), 82892753);
     }
 
     #[test]

@@ -64,15 +64,8 @@ impl From<i64> for Instruction {
         let a = ParameterMode::from(chars.next().unwrap());
         let b = ParameterMode::from(chars.next().unwrap());
         let c = ParameterMode::from(chars.next().unwrap());
-        let params = (
-            c,
-            b,
-            a,
-        );
-        Instruction {
-            opcode,
-            params,
-        }
+        let params = (c, b, a);
+        Instruction { opcode, params }
     }
 }
 
@@ -91,13 +84,10 @@ impl Computer {
             program: program
                 .into_iter()
                 .enumerate()
-                .fold(
-                    HashMap::new(),
-                    |mut result, (i, x)| {
-                        result.insert(i as i64, x);
-                        result
-                    },
-                ),
+                .fold(HashMap::new(), |mut result, (i, x)| {
+                    result.insert(i as i64, x);
+                    result
+                }),
             input_queue: input.into_iter().cloned().collect(),
             default_input: 0,
             pos: 0,
@@ -138,7 +128,7 @@ impl Computer {
         match mode {
             ParameterMode::Immediate => panic!("immediate mode not supported for writing"),
             ParameterMode::Position => self.program.insert(a, value),
-            ParameterMode::Relative => self.program.insert(a + self.relative_base, value)
+            ParameterMode::Relative => self.program.insert(a + self.relative_base, value),
         };
     }
 }
@@ -223,7 +213,7 @@ impl<'a> Iterator for Computer {
                     return None;
                 }
             }
-        };
+        }
     }
 }
 
@@ -233,9 +223,17 @@ mod tests {
 
     #[test]
     fn test_parse_input() {
-        let values: Vec<(i64, Instruction)> = vec![
-            (1002, Instruction { opcode: OpCode::Multiply, params: (ParameterMode::Position, ParameterMode::Immediate, ParameterMode::Position) })
-        ];
+        let values: Vec<(i64, Instruction)> = vec![(
+            1002,
+            Instruction {
+                opcode: OpCode::Multiply,
+                params: (
+                    ParameterMode::Position,
+                    ParameterMode::Immediate,
+                    ParameterMode::Position,
+                ),
+            },
+        )];
         for (input, answer) in values {
             assert_eq!(Instruction::from(input), answer);
         }
@@ -265,8 +263,8 @@ mod tests {
         let values: Vec<(Vec<i64>, i64, i64)> = vec![
             (vec![3, 9, 8, 9, 10, 9, 4, 9, 99, -1, 8], 2, 8), // equal to 8
             (vec![3, 9, 7, 9, 10, 9, 4, 9, 99, -1, 8], 9, 4), // less than 8
-            (vec![3, 3, 1108, -1, 8, 3, 4, 3, 99], 9, 8), // equal to 8
-            (vec![3, 3, 1107, -1, 8, 3, 4, 3, 99], 8, 7), // less than 8
+            (vec![3, 3, 1108, -1, 8, 3, 4, 3, 99], 9, 8),     // equal to 8
+            (vec![3, 3, 1107, -1, 8, 3, 4, 3, 99], 8, 7),     // less than 8
         ];
         for (program, falsy, truthy) in values {
             let mut computer = Computer::new(program.clone(), &[falsy]);
@@ -278,12 +276,12 @@ mod tests {
 
     #[test]
     fn test_complex_program() {
-        let program: Vec<i64> = vec![3, 21, 1008, 21, 8, 20, 1005, 20, 22, 107, 8, 21, 20, 1006, 20, 31, 1106, 0, 36, 98, 0, 0, 1002, 21, 125, 20, 4, 20, 1105, 1, 46, 104, 999, 1105, 1, 46, 1101, 1000, 1, 20, 4, 20, 1105, 1, 46, 98, 99];
-        let values: Vec<(i64, i64)> = vec![
-            (7, 999),
-            (8, 1000),
-            (9, 1001),
+        let program: Vec<i64> = vec![
+            3, 21, 1008, 21, 8, 20, 1005, 20, 22, 107, 8, 21, 20, 1006, 20, 31, 1106, 0, 36, 98, 0,
+            0, 1002, 21, 125, 20, 4, 20, 1105, 1, 46, 104, 999, 1105, 1, 46, 1101, 1000, 1, 20, 4,
+            20, 1105, 1, 46, 98, 99,
         ];
+        let values: Vec<(i64, i64)> = vec![(7, 999), (8, 1000), (9, 1001)];
         for (val, out) in values {
             let mut computer = Computer::new(program.clone(), &[val]);
             assert_eq!(computer.next().unwrap(), out);
@@ -293,8 +291,18 @@ mod tests {
     #[test]
     fn test_relative_mode_parameters() {
         let values: Vec<(Vec<i64>, Vec<i64>)> = vec![
-            (vec![109, 1, 204, -1, 1001, 100, 1, 100, 1008, 100, 16, 101, 1006, 101, 0, 99], vec![109, 1, 204, -1, 1001, 100, 1, 100, 1008, 100, 16, 101, 1006, 101, 0, 99]),
-            (vec![1102, 34915192, 34915192, 7, 4, 7, 99, 0], vec![1219070632396864]),
+            (
+                vec![
+                    109, 1, 204, -1, 1001, 100, 1, 100, 1008, 100, 16, 101, 1006, 101, 0, 99,
+                ],
+                vec![
+                    109, 1, 204, -1, 1001, 100, 1, 100, 1008, 100, 16, 101, 1006, 101, 0, 99,
+                ],
+            ),
+            (
+                vec![1102, 34915192, 34915192, 7, 4, 7, 99, 0],
+                vec![1219070632396864],
+            ),
             (vec![104, 1125899906842624, 99], vec![1125899906842624]),
         ];
         for (program, output) in values {

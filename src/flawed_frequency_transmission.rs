@@ -1,7 +1,7 @@
 lazy_static! {
     static ref BASE_PATTERN: Vec<isize> = vec![0, 1, 0, -1];
 }
-fn make_repeated_pattern(count: usize) -> impl Iterator<Item = isize> {
+fn make_repeated_pattern(count: usize) -> impl Iterator<Item=isize> {
     BASE_PATTERN
         .iter()
         .flat_map(move |&x| std::iter::repeat(x).take(count))

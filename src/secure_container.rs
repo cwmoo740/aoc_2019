@@ -12,8 +12,7 @@ fn iterate_pairs(x: &str) -> Zip<Chars, Chars> {
 }
 
 fn at_least_one_double(x: &str) -> bool {
-    iterate_pairs(x)
-        .any(|(a, b)| a == b)
+    iterate_pairs(x).any(|(a, b)| a == b)
 }
 
 fn at_least_one_double_strict(x: &str) -> bool {
@@ -46,7 +45,8 @@ pub fn solve_part_one(range: Range<usize>) -> usize {
 }
 
 pub fn solve_part_two(range: Range<usize>) -> usize {
-    range.map(|x| x.to_string())
+    range
+        .map(|x| x.to_string())
         .filter(meets_requirements_part_two)
         .count()
 }
@@ -57,11 +57,8 @@ mod tests {
 
     #[test]
     fn test_at_least_one_double() {
-        let values: Vec<(&str, bool)> = vec![
-            ("11", true),
-            ("12345", false),
-            ("943325344445", true),
-        ];
+        let values: Vec<(&str, bool)> =
+            vec![("11", true), ("12345", false), ("943325344445", true)];
         for (val, expected) in values {
             assert_eq!(at_least_one_double(val), expected);
         }
@@ -69,11 +66,8 @@ mod tests {
 
     #[test]
     fn test_always_increase() {
-        let values: Vec<(&str, bool)> = vec![
-            ("11", true),
-            ("12345", true),
-            ("943325344445", false),
-        ];
+        let values: Vec<(&str, bool)> =
+            vec![("11", true), ("12345", true), ("943325344445", false)];
         for (val, expected) in values {
             assert_eq!(always_increase(val), expected);
         }
