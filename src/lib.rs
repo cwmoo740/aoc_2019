@@ -12,6 +12,7 @@ pub mod crossed_wires;
 pub mod flawed_frequency_transmission;
 pub mod get_input;
 pub mod intcode;
+pub mod many_worlds_interpretation;
 pub mod monitoring_station;
 pub mod n_body_problem;
 pub mod oxygen_system;
