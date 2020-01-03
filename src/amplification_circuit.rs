@@ -11,7 +11,7 @@ fn run_amplifiers(program: &Vec<i64>, settings: &Vec<i64>) -> i64 {
     let mut output: Vec<i64> = vec![0];
     for &setting in settings {
         let input = vec![setting, *output.first().unwrap()];
-        let computer = Computer::new(program.clone(), &input);
+        let computer = Computer::new(program, &input);
         output = computer.collect();
     }
     *output.first().unwrap()
@@ -20,7 +20,7 @@ fn run_amplifiers(program: &Vec<i64>, settings: &Vec<i64>) -> i64 {
 fn run_amplifiers_with_feedback(program: &Vec<i64>, settings: &Vec<i64>) -> i64 {
     let mut computers: Vec<Computer> = settings
         .iter()
-        .map(|&setting| Computer::new(program.clone(), &[setting]))
+        .map(|&setting| Computer::new(program, &[setting]))
         .collect();
     let mut last_output: i64 = 0;
     'outer: loop {

@@ -94,7 +94,7 @@ struct Robot {
 impl Robot {
     fn new() -> Self {
         Robot {
-            computer: Computer::new(Computer::load_data(11), &[]),
+            computer: Computer::new(&Computer::load_data(11), &[]),
             map: HashMap::new(),
             position: Position {
                 x: 0,

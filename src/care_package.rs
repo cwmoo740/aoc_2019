@@ -30,7 +30,7 @@ impl Game {
 }
 
 pub fn solve_part_one() -> usize {
-    let computer = Computer::new(Computer::load_data(13), &[]);
+    let computer = Computer::new(&Computer::load_data(13), &[]);
     computer
         .collect::<Vec<i64>>()
         .chunks_exact(3)
@@ -41,7 +41,7 @@ pub fn solve_part_one() -> usize {
 pub fn solve_part_two() -> i64 {
     let mut data = Computer::load_data(13);
     data[0] = 2;
-    let computer = Computer::new(data, &[]);
+    let computer = Computer::new(&data, &[]);
     let mut game = Game {
         ball: (0, 0),
         paddle: (0, 0),

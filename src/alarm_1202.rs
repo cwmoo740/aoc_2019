@@ -7,7 +7,7 @@ pub fn solve_part_one() -> i64 {
         x[2] = 2;
         x
     };
-    let mut computer = Computer::new(program, &[]);
+    let mut computer = Computer::new(&program, &[]);
     computer.next();
     computer.program[&0]
 }
@@ -22,7 +22,7 @@ pub fn solve_part_two() -> Option<i64> {
                 cloned[2] = verb;
                 cloned
             };
-            let mut computer = Computer::new(program, &[]);
+            let mut computer = Computer::new(&program, &[]);
             computer.next();
             if computer.program[&0] == 19690720 {
                 return Option::Some(100 * noun + verb);
@@ -51,7 +51,7 @@ mod tests {
             ),
         ];
         for (program, expected) in cases {
-            let mut computer = Computer::new(program, &[]);
+            let mut computer = Computer::new(&program, &[]);
             computer.next();
             assert_eq!(computer.get_program(), expected);
         }

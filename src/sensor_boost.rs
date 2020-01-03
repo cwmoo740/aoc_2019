@@ -2,13 +2,13 @@ use super::intcode::Computer;
 
 pub fn solve_part_one() -> Vec<i64> {
     let program = Computer::load_data(9);
-    let computer = Computer::new(program, &[1]);
+    let computer = Computer::new(&program, &[1]);
     computer.collect()
 }
 
 pub fn solve_part_two() -> Vec<i64> {
     let program = Computer::load_data(9);
-    let computer = Computer::new(program, &[2]);
+    let computer = Computer::new(&program, &[2]);
     computer.collect()
 }
 

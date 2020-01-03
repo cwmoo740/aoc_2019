@@ -98,7 +98,7 @@ fn get_intersections(image: &Vec<Vec<Pixel>>) -> Vec<(usize, usize)> {
 }
 
 pub fn solve_part_one() -> usize {
-    let mut computer = Computer::new(Computer::load_data(17), &[]);
+    let mut computer = Computer::new(&Computer::load_data(17), &[]);
     let image = get_image(&mut computer);
     print_image(&image);
     let intersections = get_intersections(&image);
@@ -162,7 +162,7 @@ pub fn solve_part_two() -> i64 {
 
     let mut data = Computer::load_data(17);
     data[0] = 2;
-    Computer::new(data, &input).last().unwrap()
+    Computer::new(&data, &input).last().unwrap()
 }
 
 #[cfg(test)]

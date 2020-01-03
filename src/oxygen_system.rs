@@ -152,7 +152,7 @@ impl Default for Robot {
                 map.insert(Coordinate::default(), Tile::DISCOVERED);
                 map
             },
-            computer: Computer::new(Computer::load_data(15), &[]),
+            computer: Computer::new(&Computer::load_data(15), &[]),
             sensor: None,
             debug_print: false,
         }

@@ -109,6 +109,7 @@ fn parse_input(input: String, modify_grid: bool) -> (Grid, Vec<Vertex>) {
     (grid, robots)
 }
 
+#[allow(dead_code, unused_variables)]
 fn grid_to_string(grid: &Grid, robots: &Vec<Vertex>) -> String {
     let mut result: Vec<String> = Vec::new();
     let x_max = grid.keys().max_by_key(|&v| v.x).unwrap().x;
