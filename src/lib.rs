@@ -25,3 +25,4 @@ pub mod space_stoichiometry;
 pub mod sunny_asteroids;
 pub mod tyranny_of_rocket;
 pub mod universal_orbit_map;
+pub mod tractor_beam;

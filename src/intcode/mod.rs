@@ -72,6 +72,7 @@ impl From<i64> for Instruction {
 #[derive(Default, Debug)]
 pub struct Computer {
     pub program: HashMap<i64, i64>,
+    original_program: HashMap<i64, i64>,
     pub input_queue: VecDeque<i64>,
     default_input: i64,
     pos: i64,
@@ -79,15 +80,17 @@ pub struct Computer {
 }
 
 impl Computer {
-    pub fn new(program: Vec<i64>, input: &[i64]) -> Self {
+    pub fn new(data: &Vec<i64>, input: &[i64]) -> Self {
+        let program = data
+            .iter()
+            .enumerate()
+            .fold(HashMap::new(), |mut result, (i, &x)| {
+                result.insert(i as i64, x);
+                result
+            });
         Computer {
-            program: program
-                .into_iter()
-                .enumerate()
-                .fold(HashMap::new(), |mut result, (i, x)| {
-                    result.insert(i as i64, x);
-                    result
-                }),
+            program: program.clone(),
+            original_program: program,
             input_queue: input.into_iter().cloned().collect(),
             default_input: 0,
             pos: 0,
@@ -101,6 +104,13 @@ impl Computer {
             .map(|z| i64::from_str_radix(z, 10).unwrap())
             .collect()
     }
+    pub fn reset(&mut self) {
+        self.program = self.original_program.clone();
+        self.input_queue.clear();
+        self.default_input = 0;
+        self.pos = 0;
+        self.relative_base = 0;
+    }
     pub fn get_program(&self) -> Vec<i64> {
         let len = *self.program.keys().max().unwrap();
         let mut result = vec![0; (len + 1) as usize];
@@ -108,6 +118,9 @@ impl Computer {
             result[i as usize] = v;
         }
         result
+    }
+    pub fn add_input(&mut self, input: &[i64]) {
+        self.input_queue.extend(input);
     }
     pub fn set_default_input(&mut self, value: i64) {
         self.default_input = value;
@@ -242,7 +255,7 @@ mod tests {
     #[test]
     fn test_program_with_negative_numbers() {
         let program: Vec<i64> = vec![1101, 100, -1, 4, 0];
-        let mut computer = Computer::new(program, &[0]);
+        let mut computer = Computer::new(&program, &[0]);
         let output = computer.next();
         assert!(output.is_none());
         assert_eq!(computer.get_program(), vec![1101, 100, -1, 4, 99]);
@@ -251,7 +264,7 @@ mod tests {
     #[test]
     fn test_simple_program() {
         let program: Vec<i64> = vec![1002, 4, 3, 4, 33];
-        let mut computer = Computer::new(program, &[0]);
+        let mut computer = Computer::new(&program, &[0]);
         let output = computer.next();
         assert!(output.is_none());
         assert_eq!(computer.get_program(), vec![1002, 4, 3, 4, 99]);
@@ -267,9 +280,9 @@ mod tests {
             (vec![3, 3, 1107, -1, 8, 3, 4, 3, 99], 8, 7),     // less than 8
         ];
         for (program, falsy, truthy) in values {
-            let mut computer = Computer::new(program.clone(), &[falsy]);
+            let mut computer = Computer::new(&program, &[falsy]);
             assert_eq!(computer.next().unwrap(), 0);
-            computer = Computer::new(program.clone(), &[truthy]);
+            computer = Computer::new(&program, &[truthy]);
             assert_eq!(computer.next().unwrap(), 1);
         }
     }
@@ -283,7 +296,7 @@ mod tests {
         ];
         let values: Vec<(i64, i64)> = vec![(7, 999), (8, 1000), (9, 1001)];
         for (val, out) in values {
-            let mut computer = Computer::new(program.clone(), &[val]);
+            let mut computer = Computer::new(&program, &[val]);
             assert_eq!(computer.next().unwrap(), out);
         }
     }
@@ -306,7 +319,7 @@ mod tests {
             (vec![104, 1125899906842624, 99], vec![1125899906842624]),
         ];
         for (program, output) in values {
-            assert_eq!(Computer::new(program, &[]).collect::<Vec<i64>>(), output);
+            assert_eq!(Computer::new(&program, &[]).collect::<Vec<i64>>(), output);
         }
     }
 }
