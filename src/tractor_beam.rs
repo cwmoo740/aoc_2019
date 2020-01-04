@@ -24,7 +24,11 @@ pub fn solve_part_one() -> usize {
     affected.len()
 }
 
-fn is_in_tractor_beam(computer: &mut Computer, cache: &mut HashMap<(i64, i64), i64>, &(x, y): &(i64, i64)) -> bool {
+fn is_in_tractor_beam(
+    computer: &mut Computer,
+    cache: &mut HashMap<(i64, i64), i64>,
+    &(x, y): &(i64, i64),
+) -> bool {
     if *cache.get(&(x, y)).unwrap_or(&0) == 1 {
         true
     } else {

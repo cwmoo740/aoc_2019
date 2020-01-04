@@ -149,18 +149,43 @@ fn add_key(keys: &str, c: char) -> String {
     }
 }
 
-fn update_robot_positions(positions: &Vec<Vertex>, new_vertex: Vertex, index: usize) -> Vec<Vertex> {
+fn update_robot_positions(
+    positions: &Vec<Vertex>,
+    new_vertex: Vertex,
+    index: usize,
+) -> Vec<Vertex> {
     let mut new_positions = positions.clone();
     new_positions[index] = new_vertex;
     new_positions
 }
 
-fn get_successors(grid: &Grid, positions: &Vec<Vertex>, active_robot: usize, keys: &str) -> Vec<MultiRobotState> {
-    positions[active_robot].neighbors().into_iter()
+fn get_successors(
+    grid: &Grid,
+    positions: &Vec<Vertex>,
+    active_robot: usize,
+    keys: &str,
+) -> Vec<MultiRobotState> {
+    positions[active_robot]
+        .neighbors()
+        .into_iter()
         .filter_map(|neighbor| match grid.get(&neighbor) {
-            Some(&Tile::Key(key)) => Some(MultiRobotState(update_robot_positions(positions, neighbor, active_robot), None, add_key(keys, key))),
-            Some(&Tile::Door(code)) if keys.contains(&code.to_ascii_lowercase().to_string()) => Some(MultiRobotState(update_robot_positions(positions, neighbor, active_robot), Some(active_robot), keys.to_string())),
-            Some(Tile::Passage) => Some(MultiRobotState(update_robot_positions(positions, neighbor, active_robot), Some(active_robot), keys.to_string())),
+            Some(&Tile::Key(key)) => Some(MultiRobotState(
+                update_robot_positions(positions, neighbor, active_robot),
+                None,
+                add_key(keys, key),
+            )),
+            Some(&Tile::Door(code)) if keys.contains(&code.to_ascii_lowercase().to_string()) => {
+                Some(MultiRobotState(
+                    update_robot_positions(positions, neighbor, active_robot),
+                    Some(active_robot),
+                    keys.to_string(),
+                ))
+            }
+            Some(Tile::Passage) => Some(MultiRobotState(
+                update_robot_positions(positions, neighbor, active_robot),
+                Some(active_robot),
+                keys.to_string(),
+            )),
             _ => None,
         })
         .collect()
@@ -181,15 +206,15 @@ fn shortest_walk(grid: &Grid, robots: &Vec<Vertex>) -> usize {
                         .collect()
                 }
             }
-                .into_iter()
-                .map(|z| (z, 1))
-                .collect::<Vec<(MultiRobotState, usize)>>()
+            .into_iter()
+            .map(|z| (z, 1))
+            .collect::<Vec<(MultiRobotState, usize)>>()
         },
         |MultiRobotState(_, _, keys)| *keys == all_keys,
-    ).unwrap();
+    )
+    .unwrap();
     cost
 }
-
 
 pub fn solve_part_one() -> usize {
     let input = super::get_input::main(18);
@@ -209,11 +234,13 @@ mod tests {
 
     #[test]
     fn test_game_from_str() {
-        let input = concat!("#########\n", "#b.A.@.a#\n", "#########", ).to_string();
+        let input = concat!("#########\n", "#b.A.@.a#\n", "#########",).to_string();
         let (grid, robots) = parse_input(input, false);
         assert_eq!(robots, vec![Vertex::new(5, 1)]);
         assert_eq!(
-            grid,
+            grid.into_iter()
+                .filter(|(_, v)| *v != Tile::Wall)
+                .collect::<Grid>(),
             vec![
                 ((1, 1), Tile::Key('b')),
                 ((2, 1), Tile::Passage),
@@ -223,9 +250,9 @@ mod tests {
                 ((6, 1), Tile::Passage),
                 ((7, 1), Tile::Key('a')),
             ]
-                .into_iter()
-                .map(|((x, y), tile)| (Vertex::new(x, y), tile))
-                .collect::<HashMap<Vertex, Tile>>()
+            .into_iter()
+            .map(|((x, y), tile)| (Vertex::new(x, y), tile))
+            .collect::<HashMap<Vertex, Tile>>()
         );
     }
 
@@ -233,13 +260,13 @@ mod tests {
     fn test_shortest_walk() {
         let (grid, start_vertices) = parse_input(
             concat!(
-            "########################\n",
-            "#...............b.C.D.f#\n",
-            "#.######################\n",
-            "#.....@.a.B.c.d.A.e.F.g#\n",
-            "########################",
+                "########################\n",
+                "#...............b.C.D.f#\n",
+                "#.######################\n",
+                "#.....@.a.B.c.d.A.e.F.g#\n",
+                "########################",
             )
-                .to_string(),
+            .to_string(),
             false,
         );
         assert_eq!(shortest_walk(&grid, &start_vertices), 132);
@@ -249,15 +276,15 @@ mod tests {
     fn test_shortest_walk_with_multiple_robots() {
         let (grid, start_vertices) = parse_input(
             concat!(
-            "###############\n",
-            "#d.ABC.#.....a#\n",
-            "######...######\n",
-            "######.@.######\n",
-            "######...######\n",
-            "#b.....#.....c#\n",
-            "###############\n",
+                "###############\n",
+                "#d.ABC.#.....a#\n",
+                "######...######\n",
+                "######.@.######\n",
+                "######...######\n",
+                "#b.....#.....c#\n",
+                "###############\n",
             )
-                .to_string(),
+            .to_string(),
             true,
         );
         assert_eq!(shortest_walk(&grid, &start_vertices), 24);

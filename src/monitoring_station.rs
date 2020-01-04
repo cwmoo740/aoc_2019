@@ -131,9 +131,9 @@ mod tests {
                 (3, 4),
                 (4, 4)
             ]
-                .iter()
-                .cloned()
-                .collect::<AsteroidMap>()
+            .iter()
+            .cloned()
+            .collect::<AsteroidMap>()
         );
     }
 

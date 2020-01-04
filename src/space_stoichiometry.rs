@@ -133,12 +133,12 @@ mod test {
                 );
             }
             reactions
-        }, )
+        },)
     }
 
     #[test]
     fn test_produce_fuel() {
-        assert_eq!(get_required_ore(1, &parse_input(get_test_input())), 31, )
+        assert_eq!(get_required_ore(1, &parse_input(get_test_input())), 31,)
     }
 
     #[test]
@@ -162,7 +162,7 @@ mod test {
             165 ORE => 2 GPVTF
             3 DCFZ, 7 NZVS, 5 HKGWZ, 10 PSHF => 8 KHKGT
         "
-            .to_string();
+        .to_string();
         assert_eq!(binary_search(1000000000000, &parse_input(input)), 82892753);
     }
 

@@ -99,10 +99,10 @@ mod tests {
                     height: 2,
                 },
             ))
-                .iter()
-                .collect::<String>()
-                .parse::<usize>()
-                .unwrap(),
+            .iter()
+            .collect::<String>()
+            .parse::<usize>()
+            .unwrap(),
             123456,
         );
     }

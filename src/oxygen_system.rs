@@ -60,7 +60,7 @@ impl Direction {
             Direction::WEST,
             Direction::EAST,
         ]
-            .into_iter()
+        .into_iter()
     }
     fn from_dxdy(dxdy: (isize, isize)) -> Direction {
         match dxdy {
@@ -233,7 +233,7 @@ impl Robot {
             |coord| Coordinate::distance(coord, target),
             |coord| coord == target,
         )
-            .unwrap()
+        .unwrap()
     }
     fn navigate_path(&mut self, path: Vec<Coordinate>) {
         assert_eq!(self.position, path[0]);
@@ -394,9 +394,9 @@ mod tests {
             ((2, 4), Tile::WALL),
             ((3, 4), Tile::WALL),
         ]
-            .into_iter()
-            .map(|((x, y), v)| (Coordinate { x, y }, v))
-            .collect();
+        .into_iter()
+        .map(|((x, y), v)| (Coordinate { x, y }, v))
+        .collect();
 
         assert_eq!(flood(&map, &Coordinate { x: 2, y: 3 }), 4);
     }
