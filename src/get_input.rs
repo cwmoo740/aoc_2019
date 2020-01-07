@@ -2,7 +2,7 @@ use std::fs;
 use std::path::Path;
 
 fn get_file_path(day: usize) -> String {
-    format!("./data/day_{}.txt", day)
+    format!("./data/{}.txt", day)
 }
 
 fn file_exists(day: usize) -> bool {
