@@ -23,6 +23,7 @@ pub mod set_and_forget;
 pub mod space_image;
 pub mod space_police;
 pub mod space_stoichiometry;
+pub mod springdroid_adventure;
 pub mod sunny_asteroids;
 pub mod tractor_beam;
 pub mod tyranny_of_rocket;
