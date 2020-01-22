@@ -74,6 +74,7 @@ pub struct Computer {
     pub program: HashMap<i64, i64>,
     original_program: HashMap<i64, i64>,
     pub input_queue: VecDeque<i64>,
+    pub yield_on_empty: bool,
     default_input: i64,
     pos: i64,
     relative_base: i64,
@@ -92,6 +93,7 @@ impl Computer {
             program: program.clone(),
             original_program: program,
             input_queue: input.into_iter().cloned().collect(),
+            yield_on_empty: false,
             default_input: 0,
             pos: 0,
             relative_base: 0,
@@ -208,6 +210,9 @@ impl<'a> Iterator for Computer {
                     self.pos += 4;
                 }
                 OpCode::Input => {
+                    if self.yield_on_empty && self.input_queue.is_empty() {
+                        return None;
+                    }
                     let value = self.input_queue.pop_front().unwrap_or(self.default_input);
                     self.write(self.pos + 1, value, instruction.params.0);
                     self.pos += 2;

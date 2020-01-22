@@ -8,6 +8,7 @@ extern crate pathfinding;
 pub mod alarm_1202;
 pub mod amplification_circuit;
 pub mod care_package;
+pub mod category_six;
 pub mod crossed_wires;
 pub mod donut_maze;
 pub mod flawed_frequency_transmission;
