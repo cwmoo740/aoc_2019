@@ -1,5 +1,6 @@
+use std::collections::HashSet;
+
 use super::intcode::Computer;
-use std::collections::{VecDeque, HashMap, HashSet};
 
 fn run(mut computers: Vec<Computer>, with_looping: bool) -> i64 {
     let mut last_packet: Option<(i64, i64)> = None;

@@ -68,7 +68,7 @@ pub fn solve_part_one() -> usize {
 }
 
 // taken from https://github.com/enjmusic/aoc_2019/blob/master/aoc_22/src/main.rs
-fn mod_pow(mut base: i128, mut exp: i128, modulus: i128) -> i128 {
+fn mod_pow(base: i128, exp: i128, modulus: i128) -> i128 {
     let mut powers_of_two = vec![base % modulus];
     let mut curr_power = 2;
     while curr_power < exp {
@@ -94,8 +94,6 @@ need to use some number theory to solve this because the numbers are so big
 pub fn solve_part_two() -> i128 {
     let num_cards: i128 = 119_315_717_514_047;
     let num_repeats: i128 = 101_741_582_076_661;
-
-    let mod_inv = |n: i128| -> i128 { mod_pow(n, num_cards - 2, num_cards) };
 
     let (a, b) = super::get_input::main(22)
         .lines()
