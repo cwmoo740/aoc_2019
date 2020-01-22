@@ -20,6 +20,7 @@ pub mod oxygen_system;
 pub mod secure_container;
 pub mod sensor_boost;
 pub mod set_and_forget;
+pub mod slam_shuffle;
 pub mod space_image;
 pub mod space_police;
 pub mod space_stoichiometry;
