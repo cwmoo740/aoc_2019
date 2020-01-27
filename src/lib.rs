@@ -18,6 +18,7 @@ pub mod many_worlds_interpretation;
 pub mod monitoring_station;
 pub mod n_body_problem;
 pub mod oxygen_system;
+pub mod planet_discord;
 pub mod secure_container;
 pub mod sensor_boost;
 pub mod set_and_forget;
