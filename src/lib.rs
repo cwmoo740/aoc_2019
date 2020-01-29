@@ -10,6 +10,7 @@ pub mod amplification_circuit;
 pub mod care_package;
 pub mod category_six;
 pub mod crossed_wires;
+pub mod cryostasis;
 pub mod donut_maze;
 pub mod flawed_frequency_transmission;
 pub mod get_input;

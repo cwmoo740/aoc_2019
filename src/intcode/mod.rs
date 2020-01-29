@@ -99,6 +99,19 @@ impl Computer {
             relative_base: 0,
         }
     }
+    pub fn ascii_to_intcode(x: &Vec<&str>) -> Vec<i64> {
+        format!("{}\n", x.join("\n"))
+            .chars()
+            .map(|ch| ch as i64)
+            .collect()
+    }
+    pub fn intcode_to_ascii(x: &Vec<i64>) -> String {
+        x[0..x.len() - 1]
+            .iter()
+            .cloned()
+            .map(|z| z as u8 as char)
+            .collect()
+    }
     pub fn load_data(day: usize) -> Vec<i64> {
         super::get_input::main(day)
             .trim()
